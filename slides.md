@@ -128,14 +128,16 @@ npm install -D vitest @vue/test-utils @vitejs/plugin-vue
 
 ```
 
-_(or yarn add -D ... / pnpm add -D ... depending on your package manager)_
+<v-click>
+<i>(or yarn add -D ... / pnpm add -D ... depending on your package manager)</i>
+</v-click>
 
 ---
 
 ## Configuration
 
 Vitest uses your existing Vite config, so you don’t need a separate big setup like Jest.
-Just add a test section inside vite.config.ts:
+Just add a test section inside `vite.config.ts`:
 
 ```js
 import { defineConfig } from "vite";
@@ -153,5 +155,121 @@ export default defineConfig({
   },
 });
 ```
+
+---
+
+**You may also create a separate `vitest.config,ts` file instead of doing vitest configuration on to of vitest config file**
+
+```ts
+import { defineConfig } from "vitest/config";
+import vue from "@vitejs/plugin-vue";
+
+export default defineConfig({
+  plugins: [vue()],
+  test: {
+    globals: true, // enables describe, it, expect without import
+    environment: "jsdom", // simulates browser-like DOM for Vue components
+    include: ["src/**/*.test.ts"], // test file pattern
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+    },
+  },
+});
+```
+
+---
+
+# configuration Summary
+
+| Aspect                 | In vite.config.ts | Separate vitest.config.ts |
+| ---------------------- | ----------------- | ------------------------- |
+| Simplicity             | Easy              | Slightly more setup       |
+| Separation of concerns | Mixed             | Clean                     |
+| Reusability            | Hard              | Easy                      |
+| CI/CD friendly         | Needs vite config | Works independently       |
+| Plugin duplication     | None              | Might repeat plugins      |
+
+---
+
+# Running Tests
+
+```json {all|3|all}
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  }
+}
+```
+
+<br><br>
+<v-click><h1>Then you can Run</h1>
+
+```bash
+npm run test
+```
+
+and this will run any test file with the formats: `*.spec.ts` and/or `*.tet.ts`
+
+</v-click>
+
+---
+
+# Required Applications to Run
+
+**To follow along and practice the tests, clone and run two repositories of the following applications:**
+
+| Application   | Purpose                                                                                | Repo                                                  |     |
+| ------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------- | --- |
+| vite-test-lab | Your Person CRUD Vue application – the main app for testing.                           | <v-click>https://github.com/KhaledObaidCubes/vite-test-lab.git</v-click> |
+| json-server   | Generates mock API data for vite-test-lab.Needed to fetch and manipulate persons data. | <v-click>https://github.com/KhaledObaidCubes/json-server.git   </v-click>|
+
+<br><br>
+<v-click>Note: json-server must run first so vite-test-lab can fetch data from its API. Otherwise, you can mock the API responses in tests.</v-click>
+
+---
+
+# Dependencies diagram:
+<v-click>
+json-server (mock API)<br></v-click>
+<v-click>
+       │<br>
+       ▼<br>
+</v-click>
+<v-click>
+vite-test-lab (Vue app fetching data)<br></v-click>
+<v-click>
+       │<br>
+       ▼<br>
+</v-click>
+<v-click>
+Vitest tests run here
+</v-click>
+---
+
+<h1>Example: Testing <i><strong color="#00a67d">"getFullName()"</strong></i> Method</h1>
+
+```ts {1|1-3|4-11|12-17|all}
+import ListController from "../app/domain/classes/list-controller";
+
+const listController = new ListController();
+
+describe("getFullName", () => {
+  it("returns the correct full name", () => {
+    const person = { firstName: "Khaled", lastName: "Qad" };
+    expect(listController.getFullName(person.firstName, person.lastName)).toBe(
+      "Khaled Qad"
+    );
+  });
+  test("instance the method it self", () => {
+    const pool = new ListController();
+    const newFunc = pool.getFullName;
+    expect(newFunc("Khaled", "Obaid")).toBe("Khaled Obaid");
+  });
+});
+
+```
+---
 
 ---

@@ -18,6 +18,8 @@ drawings:
   persist: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
+# favicon, can be a local file path or URL
+favicon: "/assets/cubesplatform.ico"
 # enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
 # open graph
@@ -90,6 +92,9 @@ Here is another comment.
 -->
 
 ---
+transition: fade-out
+level: 2
+---
 
 # Why use Vitest (instead of Jest/Mocha)?
 
@@ -99,6 +104,9 @@ Here is another comment.
 - Minimal Config: Works out of the box with Vite plugins (e.g., @vitejs/plugin-vue).
 - Better DX: Watch mode is fast, error messages are cleaner, and supports IDE integration.
 
+---
+transition: fade-out
+level: 2
 ---
 
 # Quick Comparison: Jest vs Vitest
@@ -117,6 +125,9 @@ Here is another comment.
 _“So in short: Vitest is basically Jest, but built for the Vite era — faster, simpler, and modern. If you’re already using Vite, Vitest is the natural choice.”_
 
 ---
+transition: slide-up
+level: 2
+---
 
 ## Installation
 
@@ -132,6 +143,9 @@ npm install -D vitest @vue/test-utils @vitejs/plugin-vue
 <i>(or yarn add -D ... / pnpm add -D ... depending on your package manager)</i>
 </v-click>
 
+---
+transition: slide-up
+level: 2
 ---
 
 ## Configuration
@@ -156,6 +170,9 @@ export default defineConfig({
 });
 ```
 
+---
+transition: slide-up
+level: 2
 ---
 
 **You may also create a separate `vitest.config,ts` file instead of doing vitest configuration on to of vitest config file**
@@ -220,17 +237,21 @@ and this will run any test file with the formats: `*.spec.ts` and/or `*.tet.ts`
 
 **To follow along and practice the tests, clone and run two repositories of the following applications:**
 
-| Application   | Purpose                                                                                | Repo                                                  |     |
-| ------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------- | --- |
+| Application   | Purpose                                                                                | Repo                                                                     |     |
+| ------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | --- |
 | vite-test-lab | Your Person CRUD Vue application – the main app for testing.                           | <v-click>https://github.com/KhaledObaidCubes/vite-test-lab.git</v-click> |
-| json-server   | Generates mock API data for vite-test-lab.Needed to fetch and manipulate persons data. | <v-click>https://github.com/KhaledObaidCubes/json-server.git   </v-click>|
+| json-server   | Generates mock API data for vite-test-lab.Needed to fetch and manipulate persons data. | <v-click>https://github.com/KhaledObaidCubes/json-server.git </v-click>  |
 
 <br><br>
 <v-click>Note: json-server must run first so vite-test-lab can fetch data from its API. Otherwise, you can mock the API responses in tests.</v-click>
 
 ---
+transition: slide-up
+level: 2
+---
 
 # Dependencies diagram:
+
 <v-click>
 json-server (mock API)<br></v-click>
 <v-click>
@@ -246,6 +267,10 @@ vite-test-lab (Vue app fetching data)<br></v-click>
 <v-click>
 Vitest tests run here
 </v-click>
+
+---
+transition: slide-up
+level: 2
 ---
 
 <h1>Example: Testing <i><strong color="#00a67d">"getFullName()"</strong></i> Method</h1>
@@ -268,8 +293,47 @@ describe("getFullName", () => {
     expect(newFunc("Khaled", "Obaid")).toBe("Khaled Obaid");
   });
 });
-
 ```
+
 ---
+transition: slide-up
+level: 2
+---
+
+# Test case
+
+````md magic-move {lines: true}
+```ts {*|5|*}
+import ListController from "../app/domain/classes/list-controller";
+
+const listController = new ListController();
+describe("getFullName", () => {
+  it("returns the correct full name", () => {
+    const person = { firstName: "Khaled", lastName: "Qad" };
+    expect(listController.getFullName(person.firstName, person.lastName)).toBe(
+      "Khaled Qad"
+    );
+  });
+});
+```
+
+```ts {*|1-2|3-4|3-4,8}
+import ListController from "../app/domain/classes/list-controller";
+
+const listController = new ListController();
+describe("getFullName", () => {
+  test("instance the method it self", () => {
+      const pool = new ListController();
+      const newFunc = pool.getFullName;
+      expect(newFunc("Khaled", "Obaid")).toBe("Khaled Obaid");
+    });
+  });
+```
+
+
+
+Non-code blocks are ignored.
+
+````
 
 ---

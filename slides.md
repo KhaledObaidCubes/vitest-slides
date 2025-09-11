@@ -35,7 +35,7 @@ seoMeta:
 Faster, Simpler, Smarter Testing
 
 <div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Ready, Set, Test! <carbon:arrow-right />
+  Set, Test, Ready! <carbon:arrow-right />
 </div>
 
 <div class="abs-br m-6 text-xl">
@@ -175,25 +175,108 @@ transition: slide-up
 level: 2
 ---
 
-**You may also create a separate `vitest.config,ts` file instead of doing vitest configuration on to of vitest config file**
+## Configuration
+
+**Create a separate `vitest.config,ts` file instead of doing vitest configuration on to of vitest config file**
 
 ```ts
 import { defineConfig } from "vitest/config";
 import vue from "@vitejs/plugin-vue";
-
+import dts from "vite-plugin-dts";
+import path from "path";
 export default defineConfig({
-  plugins: [vue()],
-  test: {
-    globals: true, // enables describe, it, expect without import
-    environment: "jsdom", // simulates browser-like DOM for Vue components
-    include: ["src/**/*.test.ts"], // test file pattern
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "html"],
+  plugins: [vue(), dts({ include: "src" })],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@app": path.resolve(__dirname, "./src/app")
     },
+  },
+  test: {
+    coverage: {
+      reporter: ["text", "html"],
+      enabled: true,
+    },
+    globals: true,
+    environment: "jsdom",
+    include: ["src/**/*.{coca,test,spec}.ts"],
+    css: true,
   },
 });
 ```
+
+---
+transition: slide-up
+level: 2
+---
+
+## Configuration
+
+  1- Test: Coverage 
+```ts
+coverage: {
+  reporter: ["text", "html"],
+  enabled: true,
+}
+```
+
+
+- reporter → Defines output formats:
+   - "text" → shows coverage summary in the terminal
+   - "html" → generates a detailed HTML report (coverage/index.html)
+
+- enabled: true → Activates code coverage collection
+
+
+---
+transition: slide-up
+level: 2
+---
+
+## Configuration
+ 2- Globals
+
+```ts
+globals: true
+```
+ Type: boolean
+
+ Default: false
+
+ CLI: 
+
+````md magic-move {lines: true}
+```ts
+npx vitest --globals=false
+```
+
+```ts
+//package.json
+{
+  "scripts": {
+    "test:globals": "vitest --globals"
+  }
+}
+```
+
+
+
+Non-code blocks are ignored.
+
+````
+<v-click>
+Run
+
+```bash
+npm run test test:globals
+```
+</v-click>
+
+
+
+<!--
+configuration section
+-->
 
 ---
 
@@ -335,5 +418,3 @@ describe("getFullName", () => {
 Non-code blocks are ignored.
 
 ````
-
----
